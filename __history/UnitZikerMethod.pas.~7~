@@ -1,0 +1,43 @@
+unit UnitZikerMethod;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons;
+
+type
+  TfrmZikerMethod = class(TForm)
+    Memo1: TMemo;
+    BitBtn_OK: TBitBtn;
+    procedure FormCreate(Sender: TObject);
+    procedure BitBtn_OKClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmZikerMethod: TfrmZikerMethod;
+
+implementation
+
+{$R *.dfm}
+
+procedure TfrmZikerMethod.BitBtn_OKClick(Sender: TObject);
+begin
+  self.Close;
+end;
+
+procedure TfrmZikerMethod.FormCreate(Sender: TObject);
+begin
+  self.Position := poScreenCenter;
+  Memo1.ReadOnly := true;
+  Memo1.BiDiMode := bdRightToLeft;
+
+  Memo1.Text :=
+
+end;
+
+end.

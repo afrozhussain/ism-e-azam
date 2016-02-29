@@ -1,0 +1,647 @@
+﻿unit UnitMain;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Buttons,
+  Vcl.Menus;
+
+type
+  TfrmMain = class(TForm)
+    Panel1: TPanel;
+    Button_Calculate: TButton;
+    txtFullName: TEdit;
+    Label1: TLabel;
+    Button_Clear: TButton;
+    button_OK: TBitBtn;
+    ListBox1: TListBox;
+    Button_Save: TBitBtn;
+    Button_Preview: TBitBtn;
+    lblabjadcount: TLabel;
+    lblTotalAsma: TLabel;
+    MainMenu1: TMainMenu;
+    mnuTools1: TMenuItem;
+    mnuTabeehCounter1: TMenuItem;
+    mnuHelp: TMenuItem;
+    mnuAbout: TMenuItem;
+    mnuZikerMethod: TMenuItem;
+    N1: TMenuItem;
+    Memo1: TMemo;
+    Duas1: TMenuItem;
+    DuaforToday1: TMenuItem;
+    N2: TMenuItem;
+    MiscDuas1: TMenuItem;
+    procedure FormCreate(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure Button_CalculateClick(Sender: TObject);
+    procedure Button_ClearClick(Sender: TObject);
+    procedure button_OKClick(Sender: TObject);
+    procedure Button_SaveClick(Sender: TObject);
+    procedure OnKeyPress(Sender: TObject; var Key: Char);
+    procedure mnuZikerMethodClick(Sender: TObject);
+    procedure OnClick(Sender: TObject);
+    procedure mnuTabeehCounter1Click(Sender: TObject);
+    procedure DuaforToday1Click(Sender: TObject);
+
+
+  private
+    { Private declarations }
+    function  AbjadCount(FullName:String): String;
+    function  SortIntegers(List: TStringList; Index1, Index2: Integer): Integer;
+    procedure AddCharacter(char:String ; value:String);
+    procedure CreateNinetyNine();
+    procedure CreateAsmaList();
+    procedure CreateKeyBoard();
+    procedure LoadNinetyNine();
+
+  public
+
+    { Public declarations }
+  end;
+
+var
+  frmMain: TfrmMain;
+  aList : TStrings;
+  aValues : TStrings;
+  NinetyNineName: TStrings;
+  NinetyNineValue: TStrings;
+  NinetyNineNameMeaning: TStrings;
+  indexRegister: TStringList;
+  indexFoundAsma: TStringList;
+  keyChar, urduChar: TStringList;
+
+
+
+implementation
+
+{$R *.dfm}
+
+uses UnitZikerMethod, UnitTabeehCounter, UnitDailyDua;
+
+
+
+procedure TfrmMain.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  self.Text := 'closing';
+  {free abjad strings}
+  aList.Free;
+  avalues.Free;
+
+  NinetyNineName.Free;
+  NinetyNineValue.Free;
+  NinetyNineNameMeaning.Free;
+  indexRegister.Free;
+  keyChar.Free;
+  //keyCharSorted.Free;
+  urduChar.Free;
+  indexFoundAsma.Free;
+
+end;
+
+function TfrmMain.SortIntegers(List: TStringList; Index1, Index2: Integer): Integer;
+begin
+
+  result := StrToInt(List.Names[Index1]) - StrToInt(List.Names[Index2]);
+end;
+
+
+procedure TfrmMain.FormCreate(Sender: TObject);
+var
+  tmpList : TStringList;
+  tmpList2 : TStringListSortCompare;
+  Index: Integer;
+  I: Integer;
+  diff: Integer;
+begin
+
+  self.Position := poScreenCenter;
+  //self.BorderStyle := bsDialog;
+  panel1.Color := clWhite;
+  Button_Preview.Enabled := False;
+  panel1.Caption := 'اپنا اسم اعظم معلوم کریں';
+  txtfullname.Text := EmptyStr;
+  lblabjadcount.Caption := EmptyStr;
+  lblTotalAsma.Caption := '';
+  memo1.Text := '';
+
+  Memo1.BiDiMode := bdRightToLeft;
+  txtFullName.BiDiMode := bdRightToLeft;
+
+  {create abjad strings}
+    aList := TStringList.Create;
+    avalues := TStringList.create;
+    NinetyNineName := TStringList.Create;
+    NinetyNineValue := TStringList.Create;
+    NinetyNineNameMeaning := TStringList.Create;
+    indexRegister := TstringList.Create;
+    indexRegister.Sorted := true;
+    keyChar := TStringList.Create;
+    urduChar := TStringList.Create;
+    indexFoundAsma := TStringList.Create;
+
+    //keyCharSorted.Sorted := True;
+
+    CreateNinetyNine;
+    CreateKeyBoard;
+
+    //keyCharSorted := keyChar;
+
+    keyChar.CaseSensitive := true;
+
+  {create list }
+  AddCharacter('ا','1');
+  AddCharacter('ب','2');
+  AddCharacter('ج','3');
+  AddCharacter('د','4');
+  AddCharacter('ہ','5');
+  AddCharacter('و','6');
+  AddCharacter('ز','7');
+  AddCharacter('ح','8');
+  AddCharacter('ط','9');
+  AddCharacter('ی','10');
+
+  AddCharacter('ک','20');
+  AddCharacter('ل','30');
+  AddCharacter('م','40');
+  AddCharacter('ن','50');
+  AddCharacter('س','60');
+  AddCharacter('ع','70');
+  AddCharacter('ف','80');
+  AddCharacter('ص','90');
+
+  AddCharacter('ق','100');
+  AddCharacter('ر','200');
+  AddCharacter('ش','300');
+  AddCharacter('ت','400');
+  AddCharacter('ث','500');
+  AddCharacter('خ','600');
+  AddCharacter('ذ','700');
+  AddCharacter('ض','800');
+  AddCharacter('ظ','900');
+  AddCharacter('غ','1000');
+  AddCharacter(' ','0');
+  AddCharacter('ھ','5');
+
+  //ListBox1.Clear;
+  // check asma values
+
+
+
+
+end;
+
+procedure TfrmMain.mnuTabeehCounter1Click(Sender: TObject);
+begin
+  frmTasbeehCounter.ShowModal;
+end;
+
+procedure TfrmMain.mnuZikerMethodClick(Sender: TObject);
+begin
+  frmZikerMethod.ShowModal;
+end;
+
+procedure TfrmMain.CreateKeyBoard();
+begin
+     // Small letters
+     keyChar.Add('a'); urduChar.Add('ا');
+     keyChar.Add('b'); urduChar.Add('ب');
+     keyChar.Add('c'); urduChar.Add('چ');
+     keyChar.Add('d'); urduChar.Add('د');
+     keyChar.Add('e'); urduChar.Add('ع');
+     keyChar.Add('f'); urduChar.Add('ف');
+     keyChar.Add('g'); urduChar.Add('گ');
+     keyChar.Add('h'); urduChar.Add('ھ');
+     keyChar.Add('i'); urduChar.Add('ی');
+     keyChar.Add('j'); urduChar.Add('ج');
+     keyChar.Add('k'); urduChar.Add('ک');
+     keyChar.Add('l'); urduChar.Add('ل');
+     keyChar.Add('m'); urduChar.Add('م');
+     keyChar.Add('n'); urduChar.Add('ن');
+     keyChar.Add('o'); urduChar.Add('ہ');
+     keyChar.Add('p'); urduChar.Add('پ');
+     keyChar.Add('q'); urduChar.Add('ق');
+     keyChar.Add('r'); urduChar.Add('ر');
+     keyChar.Add('s'); urduChar.Add('س');
+     keyChar.Add('t'); urduChar.Add('ت');
+     keyChar.Add('u'); urduChar.Add('ئ');
+     keyChar.Add('v'); urduChar.Add('ط');
+     keyChar.Add('w'); urduChar.Add('و');
+     keyChar.Add('x'); urduChar.Add('ش');
+     keyChar.Add('y'); urduChar.Add('ے');
+     keyChar.Add('z'); urduChar.Add('ز');
+
+     // CAPITAL LETTERS
+     keyChar.Add('A'); urduChar.Add('ٓ');
+     keyChar.Add('B'); urduChar.Add('ؓ');
+     keyChar.Add('C'); urduChar.Add('ث');
+     keyChar.Add('D'); urduChar.Add('ڈ');
+     keyChar.Add('E'); urduChar.Add('ؑ');
+     keyChar.Add('F'); urduChar.Add('ٖ');
+     keyChar.Add('G'); urduChar.Add('غ');
+     keyChar.Add('H'); urduChar.Add('ح');
+     keyChar.Add('I'); urduChar.Add('ٰ');
+     keyChar.Add('J'); urduChar.Add('ض');
+     keyChar.Add('K'); urduChar.Add('خ');
+     keyChar.Add('L'); urduChar.Add('ؒ');
+     keyChar.Add('M'); urduChar.Add('إ');
+     keyChar.Add('N'); urduChar.Add('ں');
+     keyChar.Add('O'); urduChar.Add('ۃ');
+     keyChar.Add('P'); urduChar.Add('ُ');
+     keyChar.Add('Q'); urduChar.Add('ْ');
+     keyChar.Add('R'); urduChar.Add('ڑ');
+     keyChar.Add('S'); urduChar.Add('ص');
+     keyChar.Add('T'); urduChar.Add('ٹ');
+     keyChar.Add('U'); urduChar.Add('ٗ');
+     keyChar.Add('V'); urduChar.Add('ظ');
+     keyChar.Add('W'); urduChar.Add('ﷺ');
+     keyChar.Add('X'); urduChar.Add('ژ');
+     keyChar.Add('Y'); urduChar.Add('؁');
+     keyChar.Add('Z'); urduChar.Add('ذ');
+
+     keyChar.Add(' '); urduChar.Add(' ');
+
+
+
+end;
+
+
+procedure TfrmMain.OnClick(Sender: TObject);
+var
+  tmpList: TArray<string>;
+  I: Integer;
+begin
+  //tmpList := TStringList.Create;
+  //tmpList.Clear;
+  Memo1.Clear;
+
+  if indexFoundAsma.Count = 0 then exit;
+
+  if indexFoundAsma[Listbox1.ItemIndex] <> '-1' then
+    begin
+      tmpList := indexFoundAsma[Listbox1.ItemIndex].split([','], 3);
+
+      for I := 0 to High(tmpList) do
+        memo1.Text := memo1.Text + NinetyNineName[StrToInt( tmpList[I])] + ' : ' +
+                    NinetyNineNameMeaning[StrToInt(tmpList[I])] + #13#10 ;
+    end
+  else
+    begin
+      Memo1.Text := '';
+    end;
+
+  tmpList := nil;
+
+end;
+
+procedure TfrmMain.OnKeyPress(Sender: TObject; var Key: Char);
+var
+  ch: Char;
+  tmpIdx: Integer;
+begin
+
+  if keyChar.IndexOf(Key) <> -1 then
+    begin
+      ch := urduChar[keyChar.IndexOf(Key)].Chars[0];
+      Key :=  ch;
+    end;
+end;
+
+procedure TfrmMain.CreateNinetyNine();
+var
+  I: Integer;
+begin
+     NinetyNineName.Add('یا رحمٰن'); NinetyNineValue.Add('298'); NinetyNineNameMeaning.Add('بڑی رحمت والا');
+     NinetyNineName.Add('یا رحیم');  NinetyNineValue.Add('258'); NinetyNineNameMeaning.Add('نہائت مہربان');
+     NinetyNineName.Add('یا ملک');   NinetyNineValue.Add('90');  NinetyNineNameMeaning.Add('حقیقی بادشاہ');
+     NinetyNineName.Add('یا قدوس');  NinetyNineValue.Add('170'); NinetyNineNameMeaning.Add('نہائت مقدس اور پاک');
+     NinetyNineName.Add('یا سلام');  NinetyNineValue.Add('131'); NinetyNineNameMeaning.Add('جس کی ذاتی صفت سلامتی ہے');
+
+     NinetyNineName.Add('یا مومن');  NinetyNineValue.Add('136');  NinetyNineNameMeaning.Add('امن و امان عطا کرنے والا');
+     NinetyNineName.Add('یا مھیمن');  NinetyNineValue.Add('145'); NinetyNineNameMeaning.Add('پوری نگہبانی کرنے والا');
+     NinetyNineName.Add('یا عزیز');  NinetyNineValue.Add('94');  NinetyNineNameMeaning.Add('غلبہ اور عزت والا، جو سب پر غالب ہے');
+     NinetyNineName.Add('یا جبار');  NinetyNineValue.Add('206');  NinetyNineNameMeaning.Add('صاحب جبروت، ساری مخلوق اس کے زیرِ تصرف ہے');
+     NinetyNineName.Add('یا متکبر');  NinetyNineValue.Add('662'); NinetyNineNameMeaning.Add('کبریائی اور بڑائی اس کا حق ہے');
+     NinetyNineName.Add('یا خالق');  NinetyNineValue.Add('731');  NinetyNineNameMeaning.Add('پیدا فرمانے والا');
+     NinetyNineName.Add('یا باری');  NinetyNineValue.Add('213');  NinetyNineNameMeaning.Add('ٹھیک بنانے والا');
+     NinetyNineName.Add('یا مصور');  NinetyNineValue.Add('336');  NinetyNineNameMeaning.Add('صورت گری کرنے والا');
+     NinetyNineName.Add('یا غفار');  NinetyNineValue.Add('1281');  NinetyNineNameMeaning.Add('گناہوں کا بہت زیادہ بخشنے والا');
+     NinetyNineName.Add('یا قھار');  NinetyNineValue.Add('306');  NinetyNineNameMeaning.Add('سب پر پوری طرح غالب، جس کے سامنے سب مغلوب اور عاجز ہیں');
+     NinetyNineName.Add('یا وھاب');  NinetyNineValue.Add('14');  NinetyNineNameMeaning.Add('بغیر کسی منفعت کے خوب عطا کرنے والا');
+     NinetyNineName.Add('یا رزاق');  NinetyNineValue.Add('308');  NinetyNineNameMeaning.Add('سب کو روزی دینے والا');
+     NinetyNineName.Add('یا فتاح');  NinetyNineValue.Add('489');  NinetyNineNameMeaning.Add('سب کے لیے رحمت و رزق کے دروازے کھولنے والا');
+     NinetyNineName.Add('یا علیم');  NinetyNineValue.Add('150');  NinetyNineNameMeaning.Add('سب کچھ جاننے والا');
+     NinetyNineName.Add('یا قابض');  NinetyNineValue.Add('903');  NinetyNineNameMeaning.Add('تنگی کرنے والا');
+
+     NinetyNineName.Add('یا باسط');  NinetyNineValue.Add('72'); NinetyNineNameMeaning.Add('فراخی کرنے والا');
+     NinetyNineName.Add('یا خافض');  NinetyNineValue.Add('1481'); NinetyNineNameMeaning.Add('پست کرنے والا');
+     NinetyNineName.Add('یا رافع');  NinetyNineValue.Add('351'); NinetyNineNameMeaning.Add('بلند کرنے والا');
+     NinetyNineName.Add('یا معز');  NinetyNineValue.Add('117'); NinetyNineNameMeaning.Add('عزت دینے والا');
+     NinetyNineName.Add('یا مذل');  NinetyNineValue.Add('770'); NinetyNineNameMeaning.Add('ذلت دینے والا');
+     NinetyNineName.Add('یا سمیع');  NinetyNineValue.Add('180'); NinetyNineNameMeaning.Add('سب کچھ سننے والا');
+     NinetyNineName.Add('یا بصیر');  NinetyNineValue.Add('302'); NinetyNineNameMeaning.Add('سب کچھ دیکھنے والا');
+     NinetyNineName.Add('یا حکم');  NinetyNineValue.Add('68'); NinetyNineNameMeaning.Add('حاکمِ حقیقی');
+     NinetyNineName.Add('یا عدل');  NinetyNineValue.Add('104'); NinetyNineNameMeaning.Add('سراپا عدل و انصاف');
+     NinetyNineName.Add('یا لطیف');  NinetyNineValue.Add('129'); NinetyNineNameMeaning.Add('لطافت اور لطف و کرم جس کی ذاتی صفت ہے');
+     NinetyNineName.Add('یا خبیر');  NinetyNineValue.Add('812'); NinetyNineNameMeaning.Add('ہر بات سے با خبر');
+     NinetyNineName.Add('یا حلیم');  NinetyNineValue.Add('88'); NinetyNineNameMeaning.Add('نہائت بردبار');
+     NinetyNineName.Add('یا عظیم');  NinetyNineValue.Add('1020'); NinetyNineNameMeaning.Add('بڑی عظمت والا، سب سے بزرگ و برتر');
+     NinetyNineName.Add('یا غفور');  NinetyNineValue.Add('1286'); NinetyNineNameMeaning.Add('بہت بخشنے والا');
+     NinetyNineName.Add('یا شکور');  NinetyNineValue.Add('526'); NinetyNineNameMeaning.Add('حسنِ عمل کی قدر کرنے والا، بہتر سے بہتر جزا دینے والا');
+     NinetyNineName.Add('یا علی');  NinetyNineValue.Add('110'); NinetyNineNameMeaning.Add('سب سے بالا');
+     NinetyNineName.Add('یا کبیر');  NinetyNineValue.Add('232'); NinetyNineNameMeaning.Add('سب سے بڑا');
+     NinetyNineName.Add('یا حفیظ');  NinetyNineValue.Add('998'); NinetyNineNameMeaning.Add('سب کا نگہبان');
+     NinetyNineName.Add('یا مقیت');  NinetyNineValue.Add('550'); NinetyNineNameMeaning.Add('سب کو سامانِ حیات فراہم کرنے والا');
+     NinetyNineName.Add('یا حسیب');  NinetyNineValue.Add('80'); NinetyNineNameMeaning.Add('سب کے لیے کفایت کرنے والا');
+     NinetyNineName.Add('یا جلیل');  NinetyNineValue.Add('73'); NinetyNineNameMeaning.Add('عظیم القدر');
+     NinetyNineName.Add('یا کریم');  NinetyNineValue.Add('270'); NinetyNineNameMeaning.Add('صاحبِ کرم');
+     NinetyNineName.Add('یا رقیب');  NinetyNineValue.Add('312'); NinetyNineNameMeaning.Add('نگہدار اور محافظ');
+     NinetyNineName.Add('یا مجیب');  NinetyNineValue.Add('55'); NinetyNineNameMeaning.Add('قبول کرنے والا');
+     NinetyNineName.Add('یا واسع');  NinetyNineValue.Add('137'); NinetyNineNameMeaning.Add('وسعت رکھنے والا');
+     NinetyNineName.Add('یا حکیم');  NinetyNineValue.Add('78'); NinetyNineNameMeaning.Add('سب کام حکمت سے کرنے والا');
+     NinetyNineName.Add('یا ودود');  NinetyNineValue.Add('20'); NinetyNineNameMeaning.Add('اپنے بندوں کو چاہنے والا');
+     NinetyNineName.Add('یا مجید');  NinetyNineValue.Add('57'); NinetyNineNameMeaning.Add('بزرگی والا');
+     NinetyNineName.Add('یا باعث');  NinetyNineValue.Add('573'); NinetyNineNameMeaning.Add('اٹھانے والا، موت کے بعد مردوں کو زندہ کرنے والا');
+     NinetyNineName.Add('یا شہید');  NinetyNineValue.Add('319'); NinetyNineNameMeaning.Add('حاضر، جو سب کچھ دیکھتا اور جانتا ہے');
+     NinetyNineName.Add('یا حق');  NinetyNineValue.Add('108'); NinetyNineNameMeaning.Add('جس کی ذات و وجود اصلاً حق ہے');
+     NinetyNineName.Add('یا وکیل');  NinetyNineValue.Add('66'); NinetyNineNameMeaning.Add('کارسازِ حقیقی');
+     NinetyNineName.Add('یا قوی');  NinetyNineValue.Add('116'); NinetyNineNameMeaning.Add('صاحبِ قوت');
+     NinetyNineName.Add('یا متین');  NinetyNineValue.Add('500'); NinetyNineNameMeaning.Add('بہت مضبوط');
+     NinetyNineName.Add('یا ولی');  NinetyNineValue.Add('46'); NinetyNineNameMeaning.Add('سرپرست و مددگار');
+     NinetyNineName.Add('یا حمید');  NinetyNineValue.Add('62'); NinetyNineNameMeaning.Add('مستحقِ حمد و ستائش');
+     NinetyNineName.Add('یا محصی');  NinetyNineValue.Add('148'); NinetyNineNameMeaning.Add('سب مخلوقات کے بارے میں پوری معلومات رکھنے والا');
+     NinetyNineName.Add('یا مبدی');  NinetyNineValue.Add('56'); NinetyNineNameMeaning.Add('پہلا وجود بخشنے والا');
+     NinetyNineName.Add('یا معید');  NinetyNineValue.Add('124'); NinetyNineNameMeaning.Add('دوبارہ زندگی دینے والا');
+     NinetyNineName.Add('یا محیی');  NinetyNineValue.Add('68'); NinetyNineNameMeaning.Add('زندگی بخشنے والا');
+     NinetyNineName.Add('یا ممیت');  NinetyNineValue.Add('490'); NinetyNineNameMeaning.Add('موت دینے والا');
+     NinetyNineName.Add('یا حی');  NinetyNineValue.Add('18'); NinetyNineNameMeaning.Add('زندہ و جاوید، زندگی جس کی ذاتی صفت ہے');
+     NinetyNineName.Add('یا قیوم');  NinetyNineValue.Add('156'); NinetyNineNameMeaning.Add('خود قائم رہنے والا، سب مخلوق کو اپنی مشیئت کے مطابق قائم رکھنے والا');
+     NinetyNineName.Add('یا واجد');  NinetyNineValue.Add('14'); NinetyNineNameMeaning.Add('سب کچھ اپنے پاس رکھنے والا');
+     NinetyNineName.Add('یا ماجد');  NinetyNineValue.Add('48'); NinetyNineNameMeaning.Add('بزرگی اور عظمت والا');
+     NinetyNineName.Add('یا واحد');  NinetyNineValue.Add('19'); NinetyNineNameMeaning.Add('ایک اپنی ذات میں');
+     NinetyNineName.Add('یا احد');  NinetyNineValue.Add('13'); NinetyNineNameMeaning.Add('اپنی صفات میں یکتا');
+     NinetyNineName.Add('یا صمد');  NinetyNineValue.Add('134'); NinetyNineNameMeaning.Add('سب سے بے نیاز اور سب اس کے محتاج');
+     NinetyNineName.Add('یا قادر');  NinetyNineValue.Add('305'); NinetyNineNameMeaning.Add('قدرت والا');
+     NinetyNineName.Add('یا مقتدر');  NinetyNineValue.Add('744'); NinetyNineNameMeaning.Add('سب پر کامل اقتدار رکھنے والا');
+     NinetyNineName.Add('یا مقدم');  NinetyNineValue.Add('184'); NinetyNineNameMeaning.Add('جسے چاہے آگے کر دینے والا');
+     NinetyNineName.Add('یا موخر');  NinetyNineValue.Add('846'); NinetyNineNameMeaning.Add('جسے چاہے پیچھے کر دینے والا');
+     NinetyNineName.Add('یا اول');  NinetyNineValue.Add('37'); NinetyNineNameMeaning.Add('سب سے پہلے وجود رکھنے والا');
+     NinetyNineName.Add('یا آخر');  NinetyNineValue.Add('801'); NinetyNineNameMeaning.Add('سب کے بعد وجود رکھنے والا');
+     NinetyNineName.Add('یا ظاہر');  NinetyNineValue.Add('1106'); NinetyNineNameMeaning.Add('بالکل آشکار');
+     NinetyNineName.Add('یا باطن');  NinetyNineValue.Add('62'); NinetyNineNameMeaning.Add('بالکل مخفی');
+     NinetyNineName.Add('یا والی');  NinetyNineValue.Add('47'); NinetyNineNameMeaning.Add('مالک و کارساز');
+     NinetyNineName.Add('یا متعالی');  NinetyNineValue.Add('551'); NinetyNineNameMeaning.Add('بہت بلند و بالا');
+     NinetyNineName.Add('یا بر');  NinetyNineValue.Add('202'); NinetyNineNameMeaning.Add('بڑا محسن');
+     NinetyNineName.Add('یا تواب');  NinetyNineValue.Add('409'); NinetyNineNameMeaning.Add('توبہ کی توفیق دینے والا، توبہ قبول کرنے والا');
+     NinetyNineName.Add('یا منتقم');  NinetyNineValue.Add('630'); NinetyNineNameMeaning.Add('مجرمین کو کیفرِ کردار کو پہنچانے والا');
+     NinetyNineName.Add('یا عفو');  NinetyNineValue.Add('156'); NinetyNineNameMeaning.Add('بہت معافی دینے والا');
+     NinetyNineName.Add('یا رووف');  NinetyNineValue.Add('292'); NinetyNineNameMeaning.Add('بہت مہربان');
+     NinetyNineName.Add('یا مالک الملک');  NinetyNineValue.Add('212'); NinetyNineNameMeaning.Add('سارے جہاں کا مالک');
+     NinetyNineName.Add('یا ذوالجلال والاکرام');  NinetyNineValue.Add('1100'); NinetyNineNameMeaning.Add('حبِ جلال اور بہت کرم فرمانے والا جس کے جلال سے بندے ہمیشہ خائف ہوں اور جس کے کرم کی بندے ہمیشہ امید رکھیں');
+     NinetyNineName.Add('یا مقسط');  NinetyNineValue.Add('209'); NinetyNineNameMeaning.Add('حقدار کو حق عطا کرنے والا، عادل و منصف');
+     NinetyNineName.Add('یا جامع');  NinetyNineValue.Add('114'); NinetyNineNameMeaning.Add('ساری مخلوقات کو قیامت کے دن یکجا کرنے والا');
+     NinetyNineName.Add('یا غنی');  NinetyNineValue.Add('1060'); NinetyNineNameMeaning.Add('خود بے نیاز جس کو کسی سے کوئی حاجت نہیں');
+     NinetyNineName.Add('یا مغنی');  NinetyNineValue.Add('1100'); NinetyNineNameMeaning.Add('اپنی عطا کے ذریعے بندوں کو بے نیاز کرنے والا');
+     NinetyNineName.Add('یا مانع');  NinetyNineValue.Add('161'); NinetyNineNameMeaning.Add('روک دینے والا');
+     NinetyNineName.Add('یا ضار');  NinetyNineValue.Add('1001'); NinetyNineNameMeaning.Add('اپنی حکمت اور مشیئت کے تحت ضرر پہنچانے والا');
+     NinetyNineName.Add('یا نافع');  NinetyNineValue.Add('201'); NinetyNineNameMeaning.Add('نفع پہنچانے والا');
+     NinetyNineName.Add('یا نور');  NinetyNineValue.Add('256'); NinetyNineNameMeaning.Add('سراپا نور');
+     NinetyNineName.Add('یا ھادی');  NinetyNineValue.Add('20'); NinetyNineNameMeaning.Add('ہدائت دینے والا');
+     NinetyNineName.Add('یا بدیع');  NinetyNineValue.Add('86'); NinetyNineNameMeaning.Add('بغیر مثالِ سابق کے مخلوق کا پیدا کرنے والا');
+     NinetyNineName.Add('یا باقی');  NinetyNineValue.Add('113'); NinetyNineNameMeaning.Add('ہمیشہ رہنے والا، جسے کبھی فنا نہیں');
+     NinetyNineName.Add('یا وارث');  NinetyNineValue.Add('707'); NinetyNineNameMeaning.Add('سب کے فنا ہونے کے بعد باقی رہنے والا');
+     NinetyNineName.Add('یا رشید');  NinetyNineValue.Add('514'); NinetyNineNameMeaning.Add('صاحبِ رشد و حکمت جس کا ہر فعل درست ہے');
+     NinetyNineName.Add('یا صبور');  NinetyNineValue.Add('298'); NinetyNineNameMeaning.Add('بڑا صابر کہ بندوں کی بڑی سے بڑی نافرمانیاں دیکھتا ہے اور فوراً عذاب بھیج کر تہس نہس نہیں کرتا');
+
+     self.ListBox1.BiDiMode := bdRightToLeft;
+     LoadNinetyNine();
+
+end;
+
+procedure TfrmMain.DuaforToday1Click(Sender: TObject);
+begin
+  frmDailydua.ShowModel;
+end;
+
+procedure TfrmMain.LoadNinetyNine();
+var
+  I: Integer;
+begin
+
+     for I := 0 to NinetyNineName.Count-1 do
+      begin
+          ListBox1.Items.Add(NinetyNineName[I] + '  (' + NinetyNineValue[I]
+          + ') : ' + NinetyNineNameMeaning[I] )
+      end;
+end;
+
+
+
+function TfrmMain.AbjadCount(FullName:String):String;
+var
+  I: Integer;
+  Total_Abjad: Integer;
+  ReturnVal: String;
+begin
+
+  for I := 1 to FullName.Length  do
+    begin
+        if  aList.IndexOf(FullName[I]) <> -1 then
+          begin
+            Total_Abjad :=  Total_Abjad + aValues[alist.IndexOf(FullName[I])].ToInteger;
+          end;
+
+    end;
+    ReturnVal := Total_Abjad.ToString;
+    result := ReturnVal;
+    //Result :=  Total_Abjad;
+end;
+
+procedure tfrmmain.AddCharacter(char:String ; value:String);
+begin
+    aList.Add(char); aValues.Add(value);
+end;
+
+
+procedure TfrmMain.button_OKClick(Sender: TObject);
+begin
+  self.Close;
+end;
+
+procedure TfrmMain.Button_SaveClick(Sender: TObject);
+var
+  stream: TMemoryStream;
+  Writer: TStreamWriter;
+  saveDialog: TSaveDialog;
+  buttonSelected: Integer;
+begin
+  saveDialog := TSaveDialog.Create(self);
+  saveDialog.InitialDir := GetCurrentDir();
+  saveDialog.Filter := 'Text File|*.txt';
+  savedialog.DefaultExt := 'txt';
+  savedialog.Title := 'Save Asma Result into text file';
+  saveDialog.FileName := 'اسم اعظم برائے نام ' + txtFullName.Text;
+
+
+  if not saveDialog.Execute() then
+    exit;
+
+  // check file exist
+   if  FileExists(savedialog.FileName)  then
+   begin
+    buttonSelected := MessageDlg('File already exist. Do you want to overwite it?',
+                 mtConfirmation, mbYesNo, 0 );
+   end;
+
+   if buttonSelected = mrNo then exit;
+
+
+  stream := TMemoryStream.Create;
+  ListBox1.Items.SaveToStream(stream, TEncoding.UTF8);
+  stream.SaveToFile(saveDialog.FileName);
+  //Writer := TStreamWriter.Create('file.txt', false,TEncoding.UTF8);
+  //Writer.Write(stream.ToString);
+  stream.Free;
+  MessageDlg('File Saved', mtInformation, [mbOK], 0);
+
+  saveDialog.Free;
+end;
+
+procedure TfrmMain.Button_CalculateClick(Sender: TObject);
+var
+  I: Integer;
+  J: Integer;
+  K: Integer;
+  Name: String;
+  Total_Abjad: Integer;
+  Layer2_Total: Integer;
+  Layer3_Total: Integer;
+  tmpList: TStringList;
+  indexCombination: String;
+  tmpIndex: Integer;
+begin
+
+  if txtFullName.Text = '' then
+    begin
+       MessageDlg('Enter ''Full Name'' and try again.', mtInformation, [mbOK], 0);
+       exit;
+    end;
+
+
+  Total_Abjad := AbjadCount(txtFullName.Text).ToInteger;
+  lblAbjadCount.Caption := 'Recite Ziker : ' + Total_Abjad.ToString + ' times';
+  // Calculate matching ism-e-azam
+
+  ListBox1.Clear;
+  indexRegister.Clear;
+  tmpList := TStringList.Create;
+  tmpList.Sorted := True;
+
+  indexFoundasma.Clear;
+
+  // Layer One
+  listbox1.Items.Add('Layer 1 .....');
+  indexFoundAsma.Add('-1');
+
+ for I := 0 to NinetyNineValue.Count-1 do
+   begin
+      if  NinetyNineValue[I].ToInteger = Total_Abjad then
+      begin
+        ListBox1.Items.Add(NinetyNineName[I]);
+       // indexFoundAsma.Add(I.ToString());
+      end;
+   end;
+
+   ListBox1.Items.Add('Layer 2 .....');
+   indexFoundAsma.Add('-1');
+
+   // LAYER 2 - {calculation for Layer 2 ...}
+
+   for I := 0 to NinetyNineValue.Count-1 do
+     begin
+      for J := 0 to NinetyNineValue.Count-1 do
+        begin
+            Layer2_Total := NinetyNineValue[I].ToInteger + NinetyNineValue[J].ToInteger;
+              if Layer2_Total = Total_Abjad then
+                begin
+                  tmpList.Clear; tmpList.Add(I.ToString()); tmpList.Add(J.ToString());
+                  indexCombination := tmplist.CommaText;
+                  if not indexRegister.Find(indexCombination, tmpIndex) then
+                    begin
+                      ListBox1.Items.Add(NinetyNineName[I]
+                                      + ' '
+                                      + NinetyNineName[J]);
+                                      //+ ' ' + I.ToString + ':' + J.ToString );
+                      indexRegister.Add(indexCombination);
+                      indexFoundAsma.Add(I.ToString() + ',' + J.ToString());
+                    end;
+                end;
+        end;
+     end;
+
+   ListBox1.Items.Add('Layer 3 .....');
+   indexFoundAsma.Add('-1');
+    // LAYER 3 - {calculation for Layer 3 ... }
+
+     for I := 0 to NinetyNineValue.Count-1 do
+     begin
+      for J := 0 to NinetyNineValue.Count-1 do
+        begin
+        for K := 0 to NinetyNineValue.Count-1 do
+          begin
+            Layer3_Total := NinetyNineValue[I].ToInteger
+                            + NinetyNineValue[J].ToInteger
+                            + NinetyNineValue[K].ToInteger;
+              if Layer3_Total = Total_Abjad then
+                begin
+                  tmpList.Clear;
+                  tmpList.Add(I.ToString());
+                  tmpList.Add(J.ToString());
+                  tmpList.Add(K.ToString());
+
+                  indexCombination := tmplist.CommaText;
+
+                  if not indexRegister.Find(indexCombination, tmpIndex) then
+                    begin
+                      ListBox1.Items.Add(NinetyNineName[I]
+                                     + ' '
+                                     + NinetyNineName[J]
+                                     + ' '
+                                     + NinetyNineName[K]
+                                     );
+                      indexRegister.Add(indexCombination);
+                      indexFoundAsma.Add(I.ToString() + ',' + J.ToString()
+                                         + ',' + K.ToString())
+                    end;
+                end;
+          end;
+        end;
+     end;
+
+     lblTotalAsma.Caption := 'Asma Count : ' + ListBox1.Items.Count.ToString();
+
+     Memo1.Text := indexRegister.Count.ToString;
+
+     //ShowMessage('done');
+
+end;
+
+procedure TfrmMain.Button_ClearClick(Sender: TObject);
+begin
+  lblAbjadCount.Caption := '';
+  lblTotalAsma.Caption := '';
+  txtFullName.Text := '';
+  ListBox1.Clear;
+  indexFoundAsma.Clear;
+  LoadNinetyNine();
+
+end;
+
+procedure TfrmMain.CreateAsmaList();
+begin
+
+end;
+
+
+
+end.

@@ -1,0 +1,20 @@
+program IsmeAzam;
+
+uses
+  Vcl.Forms,
+  UnitMain in 'UnitMain.pas' {frmMain},
+  UnitZikerMethod in 'UnitZikerMethod.pas' {frmZikerMethod},
+  Vcl.Themes,
+  Vcl.Styles;
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  TStyleManager.TrySetStyle('Amethyst Kamri');
+  Application.Title := 'Ism-e-Azam';
+  Application.CreateForm(TfrmMain, frmMain);
+  Application.CreateForm(TfrmZikerMethod, frmZikerMethod);
+  Application.Run;
+end.
